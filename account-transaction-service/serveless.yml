@@ -1,0 +1,29 @@
+service: account-transaction-service
+
+provider:
+  name: aws
+  runtime: python3.8
+
+functions:
+  saveAccountTransaction:
+    handler: handler.save_account_transaction
+    events:
+      - http:
+          path: account-transaction
+          method: post
+
+resources:
+  Resources:
+    AccountTransactionTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: AccountTransaction
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
